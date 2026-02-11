@@ -388,21 +388,18 @@ class ParsecSDKBridge: ParsecService
 		}
 		var keyboardMessagePress = ParsecMessage()
 		keyboardMessagePress.type = MESSAGE_KEYBOARD
-		keyboardMessagePress.keyboard.pressed = true
 		if !isVirtualShiftOn && useShift {
-			keyboardMessagePress.keyboard.code = ParsecKeycode(rawValue: 225)
+			keyboardMessagePress.keyboard = ParsecKeyboardMessage(code: KEY_LSHIFT, mod: MOD_NONE, pressed: true, __pad: (0,0,0))
 			ParsecClientSendMessage(_parsec, &keyboardMessagePress)
 		}
-		keyboardMessagePress.keyboard.code = keyCode
+		keyboardMessagePress.keyboard = ParsecKeyboardMessage(code: keyCode, mod: MOD_NONE, pressed: true, __pad: (0,0,0))
 		ParsecClientSendMessage(_parsec, &keyboardMessagePress)
 		
 		// add release delay in case some games ignore instant key release
 		DispatchQueue.global().asyncAfter(deadline: .now() + 0.02) {
-			keyboardMessagePress.keyboard.pressed = false
+			keyboardMessagePress.keyboard = ParsecKeyboardMessage(code: keyCode, mod: MOD_NONE, pressed: false, __pad: (0,0,0))
 			if !self.isVirtualShiftOn && useShift {
-				keyboardMessagePress.keyboard.code = ParsecKeycode(rawValue: 225)
-				ParsecClientSendMessage(self._parsec, &keyboardMessagePress)
-				keyboardMessagePress.keyboard.code = keyCode
+				keyboardMessagePress.keyboard = ParsecKeyboardMessage(code: KEY_LSHIFT, mod: MOD_NONE, pressed: false, __pad: (0,0,0))
 			}
 			ParsecClientSendMessage(self._parsec, &keyboardMessagePress)
 		}
