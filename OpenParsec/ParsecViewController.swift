@@ -267,13 +267,13 @@ class ParsecViewController: UIViewController, UIScrollViewDelegate {
 		let h = size.height
 		let w = size.width
 		
+		// Reset zoom on rotation
+		scrollView.zoomScale = 1.0
+
 		self.glkView.updateSize(width: w, height: h)
 		contentView.frame.size = CGSize(width: w, height: h)
 		scrollView.contentSize = CGSize(width: w, height: h)
 		CParsec.setFrame(w, h, UIScreen.main.scale)
-
-		// Reset zoom on rotation
-		scrollView.zoomScale = 1.0
         
         // Reset accessory view to ensure correct width in new orientation
         keyboardAccessoriesView = nil
